@@ -332,3 +332,33 @@ __EXO__(4.4)
 
 week_prices = prices.resample('W')
 print(week_prices.agg(('mean', 'std', 'min', 'max')))
+
+
+
+__EXO__(4.5)
+
+mean_prices = cards_data.groupby("Nom").mean()["Prix de vente"]
+sells = cards_data.groupby("Nom").size()
+
+plt.scatter(mean_prices, sells)
+plt.xlabel("Prix moyen")
+plt.ylabel("Nombre de ventes")
+plt.show()
+plt.close()
+
+
+__EXO__(4.6)
+
+mean_prices_ln = mean_prices.apply(np.log)
+sells_ln = sells.apply(np.log)
+sells_ln_fit = np.polyfit(mean_prices_ln, sells_ln, 1)
+sells_ln_regression = np.poly1d(sells_ln_fit)
+
+plt.scatter(mean_prices_ln, sells_ln)
+plt.plot(mean_prices_ln, sells_ln_regression(mean_prices_ln))
+plt.xlabel("Prix moyen (ln)")
+plt.ylabel("Nombre de ventes (ln)")
+plt.show()
+plt.close()
+
+print(f"Les coeficients de la régression sont {sells_ln_fit} au premier degré.")
